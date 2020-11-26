@@ -23,7 +23,7 @@ with pkgs;
     }: let
       pythonPackages = callPackage
         ({ pkgs, stdenv, python, overrides }: let
-          pythonPackagesFun = import ../../../top-level/python-packages.nix {
+          pythonPackagesFun = {
             inherit stdenv pkgs;
             python = self;
           };
@@ -132,6 +132,14 @@ in {
     inherit (darwin) configd;
     inherit passthruFun;
   };
+
+  customPython3 = (sourceVersion: (sha256: 
+    let python = (callPackage ./cpython {
+      self = python;
+      inherit sourceVersion sha256;
+      inherit (darwin) configd;
+      inherit passthruFun;
+    }); in python));
 
   python37 = callPackage ./cpython {
     self = python37;
